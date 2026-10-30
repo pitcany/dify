@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weight Tuning Field Trial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column (~68ch) with full-width code and tables; a dated sequence carries the plan. */
+:root {
+  --paper: #f3f5f4;
+  --surface: #ffffff;
+  --ink: #18211e;
+  --muted: #56625d;
+  --rule: #d5dcd9;
+  --accent: #0d6b62;
+  --accent-soft: #dcebe8;
+  --keyword: #b8692a;
+  --code-bg: #e9eeec;
+  --good: #2f7a3b;
+  --warn: #9a6a12;
+  --stop: #a23b33;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.5rem;
+  --step-3: 2.3rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #101513;
+    --surface: #171e1b;
+    --ink: #e2e9e6;
+    --muted: #9aa8a2;
+    --rule: #2b3532;
+    --accent: #5cc4b7;
+    --accent-soft: #19332f;
+    --keyword: #e0a066;
+    --code-bg: #1c2421;
+    --good: #7cc98a;
+    --warn: #e2b55c;
+    --stop: #ec8a80;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #101513;
+  --surface: #171e1b;
+  --ink: #e2e9e6;
+  --muted: #9aa8a2;
+  --rule: #2b3532;
+  --accent: #5cc4b7;
+  --accent-soft: #19332f;
+  --keyword: #e0a066;
+  --code-bg: #1c2421;
+  --good: #7cc98a;
+  --warn: #e2b55c;
+  --stop: #ec8a80;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.page {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding-block: 3rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.prose { max-width: 68ch; }
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-stretch: 85%;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: var(--step-2); font-weight: 700; }
+h3 { font-size: var(--step-1); font-weight: 600; }
+p { margin: 0; }
+section { display: flex; flex-direction: column; gap: 1rem; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.lede { font-size: var(--step-1); color: var(--muted); max-width: 60ch; }
+header { display: flex; flex-direction: column; gap: 0.9rem; border-bottom: 1px solid var(--rule); padding-block: 0 2rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: var(--step--1); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 600; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+pre {
+  margin: 0;
+  background: var(--code-bg);
+  border-radius: 6px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+ul, ol { margin: 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.45rem; }
+a { color: var(--accent); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Questions */
+.questions { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+.questions li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding-block: 0.75rem; border-top: 1px solid var(--rule); }
+.questions .q-name { font-family: var(--font-display); font-stretch: 85%; font-weight: 700; color: var(--accent); }
+
+/* Weight bar: to scale, semantic share left, keyword share right */
+.weights { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.1rem; }
+.weight-row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.75rem; align-items: center; font-size: var(--step--1); }
+.bar { display: flex; height: 1.4rem; border-radius: 3px; overflow: hidden; font-family: var(--font-mono); font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+.bar span { display: flex; align-items: center; padding-inline: 0.45rem; white-space: nowrap; color: var(--paper); }
+.bar .sem { background: var(--accent); }
+.bar .kw { background: var(--keyword); justify-content: flex-end; }
+.legend { display: flex; gap: 1.2rem; font-size: var(--step--1); color: var(--muted); }
+.legend i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; margin-right: 0.35rem; vertical-align: -0.05rem; }
+
+/* Timeline */
+.timeline { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.timeline > li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1.25rem; padding-block: 1.25rem; border-top: 1px solid var(--rule); }
+.timeline > li:last-child { border-bottom: 1px solid var(--rule); }
+.when { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent); font-weight: 600; padding-top: 0.2rem; }
+.step { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--rule); }
+tr:last-child td { border-bottom: none; }
+th { font-family: var(--font-display); font-stretch: 85%; font-weight: 600; font-size: var(--step--1); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.go { color: var(--good); }
+.pill.adjust { color: var(--warn); }
+.pill.stop { color: var(--stop); }
+
+.note { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 0.85rem 1rem; border-radius: 0 6px 6px 0; max-width: 68ch; }
+.muted { color: var(--muted); }
+.example-tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .questions li, .timeline > li, .weight-row { grid-template-columns: 1fr; gap: 0.4rem; }
+  h1 { font-size: 1.9rem; }
+}
+</style>
+</head>
+<body>
+
+<main class="page">
+  <header>
+    <span class="eyebrow">Retrieval weight tuning · v1 validation</span>
+    <h1>Weight Tuning Field Trial</h1>
+    <p class="lede">A four-week plan to find out whether thumbs-up/down feedback is enough to recommend better semantic/keyword weights for deployed chatflows, before anyone builds an "apply" button.</p>
+    <div class="meta">
+      <span>Branch <b>feat/retrieval-weight-tuning</b></span>
+      <span>Scope <b>recommend-only, no weights change</b></span>
+      <span>Length <b>about 5 weeks</b></span>
+    </div>
+  </header>
+
+  <section>
+    <h2>What we need to learn</h2>
+    <p class="prose">The code is finished and tested on synthetic data. Four questions can only be answered with real traffic:</p>
+    <ul class="questions">
+      <li><span class="q-name">Volume</span><span>Does any weighted search collect 30 liked and 30 disliked traced conversations within the 30-day window? If not, the report will only ever say "not enough feedback".</span></li>
+      <li><span class="q-name">Cost</span><span>How much storage does tracing take, and does it slow the knowledge-retrieval node down?</span></li>
+      <li><span class="q-name">Stability</span><span>Does the recommendation stay put week to week, and does it stay quiet when the feedback is pure noise?</span></li>
+      <li><span class="q-name">Correctness</span><span>When the report suggests a new weight, do people actually judge the resulting chunks as more relevant?</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What the report gives us</h2>
+    <p class="prose">For each weighted search in a node, the report replays the recorded candidates under every semantic weight from 0 to 1 and compares liked against disliked conversations. A suggestion looks like this:</p>
+    <div class="weights" role="img" aria-label="Example: current weights semantic 0.70 keyword 0.30; suggested semantic 0.60 keyword 0.40">
+      <span class="example-tag">Example</span>
+      <div class="weight-row"><span>Current</span><div class="bar"><span class="sem" style="width:70%">semantic 0.70</span><span class="kw" style="width:30%">0.30</span></div></div>
+      <div class="weight-row"><span>Suggested</span><div class="bar"><span class="sem" style="width:60%">semantic 0.60</span><span class="kw" style="width:40%">0.40</span></div></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Semantic (vector)</span><span><i style="background:var(--keyword)"></i>Keyword</span></div>
+    </div>
+    <pre><code><span class="example-tag">Example output</span>
+$ flask retrieval-weight-report --tenant-id &lt;workspace&gt; --app-id &lt;app&gt;
+Node 1718…, cross-dataset merge (openai/text-embedding-3-small), current vector weight 0.70
+  Recommend vector weight 0.60 (keyword 0.40).
+  Best weight 0.60: improvement +0.180 [+0.060, +0.290], stability 74%,
+  changes results for 22% of rated runs (41 liked / 33 disliked).</code></pre>
+    <p class="prose muted">A change is only suggested with at least 30 liked and 30 disliked runs, a move of 0.1 or more, a 90% interval above zero, and a best weight that 60% of resamples agree on.</p>
+  </section>
+
+  <section>
+    <h2>Plan</h2>
+    <ol class="timeline">
+      <li>
+        <span class="when">Week 0</span>
+        <div class="step">
+          <h3>Pick pilot apps and turn tracing on</h3>
+          <p>Find chatflows that both use weighted-score retrieval and already get feedback. Aim for two or three apps with at least 100 rated conversations a month.</p>
+          <p>Rated chatflow conversations in the last 30 days:</p>
+<pre><code>SELECT a.id, a.name, f.rating, count(*) AS feedback
+FROM message_feedbacks f
+JOIN messages m ON m.id = f.message_id
+JOIN apps a     ON a.id = m.app_id
+WHERE a.mode = 'advanced-chat'
+  AND m.workflow_run_id IS NOT NULL
+  AND m.created_at &gt;= now() - interval '30 days'
+GROUP BY a.id, a.name, f.rating
+ORDER BY feedback DESC;</code></pre>
+          <p>Which of them use weighted scores, at the node or in a dataset's hybrid search:</p>
+<pre><code>-- Node-level weights (multi-dataset merge) in the published workflow
+SELECT a.id, a.name
+FROM apps a JOIN workflows w ON w.id = a.workflow_id
+WHERE a.mode = 'advanced-chat' AND w.graph LIKE '%weighted_score%';
+
+-- Datasets whose own hybrid search uses weights
+SELECT id, name FROM datasets
+WHERE retrieval_model-&gt;&gt;'search_method' = 'hybrid_search'
+  AND retrieval_model-&gt;&gt;'reranking_mode' = 'weighted_score';</code></pre>
+          <p>Then set <code>RETRIEVAL_WEIGHT_TRACE_ENABLED=true</code> and keep <code>RETRIEVAL_WEIGHT_TRACE_SAMPLE_RATE=1.0</code>, so every rated conversation in the pilot apps counts. Run the migration first.</p>
+          <p class="note">The setting covers the whole deployment, so every published chatflow with weighted retrieval gets traced, not just the pilots. If storage matters more than coverage, lower the sample rate, or add a small per-app allowlist before starting.</p>
+        </div>
+      </li>
+      <li>
+        <span class="when">Week 1</span>
+        <div class="step">
+          <h3>Check health and cost</h3>
+          <ul>
+            <li>Rows and size after the first full day. A traced conversation stores roughly 3–10 KB (one row per weighted search, 10–20 scored candidates each). Multiply by daily traced runs and 30 days of retention.</li>
+            <li>Knowledge-retrieval latency, p95 by day, compared with the week before tracing.</li>
+            <li>Logs for <code>Failed to persist weighted-score traces</code> and <code>Failed to report weighted-score observation</code>. Both should be absent or rare.</li>
+            <li>The daily cleanup task <code>clean_retrieval_weight_traces_task</code> runs on the beat schedule.</li>
+          </ul>
+<pre><code>SELECT count(*) AS rows,
+       pg_size_pretty(pg_total_relation_size('retrieval_weight_traces')) AS size
+FROM retrieval_weight_traces;
+
+SELECT date_trunc('day', created_at) AS day,
+       percentile_cont(0.95) WITHIN GROUP (ORDER BY elapsed_time) AS p95_seconds
+FROM workflow_node_executions
+WHERE node_type = 'knowledge-retrieval' AND app_id = :app_id
+  AND created_at &gt;= now() - interval '14 days'
+GROUP BY 1 ORDER BY 1;</code></pre>
+          <p class="muted">The latency query assumes node executions are stored in the database (the default <code>WORKFLOW_NODE_EXECUTION_STORAGE=rdbms</code>).</p>
+        </div>
+      </li>
+      <li>
+        <span class="when">Weeks 2–4</span>
+        <div class="step">
+          <h3>Collect and snapshot weekly</h3>
+          <p>Once a week, save the JSON report for each pilot app. Keep the snapshots; the stability check in week 5 compares them.</p>
+<pre><code>flask retrieval-weight-report --tenant-id &lt;workspace&gt; --app-id &lt;app&gt; --json \
+  &gt; reports/&lt;app&gt;-$(date +%F).json</code></pre>
+          <p>Track how fast evidence builds up, per app:</p>
+<pre><code>SELECT t.app_id,
+       count(DISTINCT t.workflow_run_id) AS traced_runs,
+       count(DISTINCT f.message_id)      AS rated_runs
+FROM retrieval_weight_traces t
+LEFT JOIN messages m          ON m.workflow_run_id = t.workflow_run_id AND m.app_id = t.app_id
+LEFT JOIN message_feedbacks f ON f.message_id = m.id
+GROUP BY t.app_id;</code></pre>
+        </div>
+      </li>
+      <li>
+        <span class="when">Week 5</span>
+        <div class="step">
+          <h3>Analyze</h3>
+          <p>Four checks, in order. The first three need a small offline script built on the existing domain module; nothing extra runs in production.</p>
+          <ul>
+            <li><b>Replay sanity.</b> For a sample of real traces, replaying at the recorded weights must reproduce exactly what was shown. Any mismatch means the trace data is wrong, and everything after it is void.</li>
+            <li><b>Placebo.</b> Shuffle the like/dislike labels 20 times and rerun. A suggestion should appear in at most 2 of the 20 runs. More than that means the thresholds let noise through.</li>
+            <li><b>Holdout.</b> Pick the weight from weeks 1–2 only, then score it on weeks 3–4. The improvement must stay above zero on the later half.</li>
+            <li><b>Human judgment.</b> For each unit with a suggestion, take 30 disliked and 30 liked queries. Show a reviewer the top results under the current and the suggested weight, in random order and unlabeled, and ask which set answers the question better.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <span class="when">Week 6</span>
+        <div class="step">
+          <h3>Decide</h3>
+          <p>Apply the rules below and record the result with the evidence: snapshots, placebo rate, holdout scores, and review tallies.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Decision rules</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outcome</th><th>When</th><th>Next step</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="pill go">Go</span></td>
+            <td>At least one unit reaches the evidence bar; placebo suggestions ≤ 2 of 20; holdout improvement &gt; 0; reviewers prefer the suggested results on most disliked queries and do no worse on liked ones.</td>
+            <td>Design Phase 2: a one-click "apply" for owners, with a per-app override and rollback.</td>
+          </tr>
+          <tr>
+            <td><span class="pill adjust">Adjust</span></td>
+            <td>Too little evidence in 30 days.</td>
+            <td>Lengthen retention to 60 days, lower the per-rating minimum, or pool evidence across apps that share a dataset.</td>
+          </tr>
+          <tr>
+            <td><span class="pill adjust">Adjust</span></td>
+            <td>Enough evidence, but placebo or holdout fails, or reviewers see no difference.</td>
+            <td>Feedback is too coarse. Try the opt-in mode where an LLM rates each candidate's relevance, using the app's model credits.</td>
+          </tr>
+          <tr>
+            <td><span class="pill stop">Stop</span></td>
+            <td>Replay sanity fails, tracing costs more than it is worth, or no app combines weighted retrieval with real feedback.</td>
+            <td>Turn tracing off and fix or shelve. Existing traces expire on their own.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Risk and rollback</h2>
+    <ul class="prose">
+      <li>Set <code>RETRIEVAL_WEIGHT_TRACE_ENABLED=false</code> to stop tracing immediately. Traces expire after the retention window, and deleting an app removes its traces.</li>
+      <li>Traces store chunk ids and scores, never the query text or chunk content.</li>
+      <li>Retrieval results never change. A failed trace write is logged and dropped, and the node still succeeds.</li>
+      <li>The migration only adds the <code>retrieval_weight_traces</code> table. Test it on a staging copy first; so far it has only been checked against SQLite in unit tests.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Decisions needed before week 0</h2>
+    <ul class="prose">
+      <li>Which deployment and which pilot apps.</li>
+      <li>Whether whole-deployment tracing is acceptable, or a per-app allowlist should be added first.</li>
+      <li>Who saves the weekly snapshots, and who reviews results in week 5 (people who know the knowledge bases are best).</li>
+      <li>Whether to build the analysis script now, so it can run on the week-2 data as an early check.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
