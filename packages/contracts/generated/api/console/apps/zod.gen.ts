@@ -4685,6 +4685,57 @@ export const zAppUserInputFormPayload = z.union([
 ])
 
 /**
+ * RetrievalWeightCurvePointResponse
+ */
+export const zRetrievalWeightCurvePointResponse = z.object({
+  improvement: z.number(),
+  vector_weight: z.number(),
+})
+
+/**
+ * RetrievalWeightAnalysisResponse
+ */
+export const zRetrievalWeightAnalysisResponse = z.object({
+  affected_share: z.number(),
+  best_vector_weight: z.number(),
+  curve: z.array(zRetrievalWeightCurvePointResponse),
+  improvement: z.number(),
+  interval_high: z.number(),
+  interval_low: z.number(),
+  stability: z.number(),
+})
+
+/**
+ * RetrievalWeightUnitResponse
+ */
+export const zRetrievalWeightUnitResponse = z.object({
+  analysis: zRetrievalWeightAnalysisResponse.nullable(),
+  current_vector_weight: z.number(),
+  dataset_id: z.string().nullable(),
+  disliked_runs: z.int(),
+  embedding_model_name: z.string(),
+  embedding_provider_name: z.string(),
+  liked_runs: z.int(),
+  node_id: z.string(),
+  recommended_vector_weight: z.number().nullable(),
+  required_per_rating: z.int().nullable(),
+  stage: z.enum(['cross_dataset', 'dataset']),
+  verdict: z.enum(['insufficient_evidence', 'keep_current', 'recommend_change']),
+  weights_changed_in_window: z.boolean(),
+})
+
+/**
+ * RetrievalWeightReportResponse
+ */
+export const zRetrievalWeightReportResponse = z.object({
+  app_id: z.string(),
+  rated_runs: z.int(),
+  tracing_enabled: z.boolean(),
+  units: z.array(zRetrievalWeightUnitResponse),
+  window_start: z.int(),
+})
+
+/**
  * WorkflowFileUploadTransferPayload
  */
 export const zWorkflowFileUploadTransferPayload = z.object({
@@ -7447,6 +7498,15 @@ export const zPostAppsByAppIdPublishToCreatorsPlatformPath = z.object({
  * Success
  */
 export const zPostAppsByAppIdPublishToCreatorsPlatformResponse = zRedirectUrlResponse
+
+export const zGetAppsByAppIdRetrievalWeightRecommendationsPath = z.object({
+  app_id: z.uuid(),
+})
+
+/**
+ * Success
+ */
+export const zGetAppsByAppIdRetrievalWeightRecommendationsResponse = zRetrievalWeightReportResponse
 
 export const zGetAppsByAppIdServerPath = z.object({
   app_id: z.uuid(),

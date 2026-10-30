@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import asdict
+from uuid import uuid4
 
 import click
 
@@ -14,6 +15,7 @@ from domain.retrieval_weight_tuning.weight_recommendation import (
     WeightRecommendation,
 )
 from extensions.application_services.retrieval_weight_traces import build_retrieval_weight_recommendation_service
+from machinery.context import RequestContext
 from services.knowledge.retrieval.weight_recommendations import (
     RecommendationAppNotFoundError,
     RetrievalWeightReport,
@@ -28,11 +30,16 @@ from services.knowledge.retrieval.weight_recommendations import (
 def retrieval_weight_report(tenant_id: str, app_id: str, as_json: bool) -> None:
     try:
         report = build_retrieval_weight_recommendation_service(database_client=get_session_maker()).recommend(
-            tenant_id=tenant_id, app_id=app_id
+            _operator_context(tenant_id), app_id
         )
     except RecommendationAppNotFoundError as error:
         raise click.ClickException(str(error)) from error
     click.echo(json.dumps(asdict(report), default=str, indent=2) if as_json else format_report(report))
+
+
+def _operator_context(tenant_id: str) -> RequestContext:
+    """Scope an operator run to one workspace. An empty account id marks it as not admitted for any account."""
+    return RequestContext(request_id=f"cli-{uuid4()}", trace_id=None, account_id="", active_workspace_id=tenant_id)
 
 
 def format_report(report: RetrievalWeightReport) -> str:
@@ -40,6 +47,7 @@ def format_report(report: RetrievalWeightReport) -> str:
     header = [
         f"App {report.app_id}: {report.rated_runs} rated runs since {report.window_start:%Y-%m-%d} (UTC).",
         "Advisory only; no weights were changed.",
+        *([] if report.tracing_enabled else ["Trace collection is off (RETRIEVAL_WEIGHT_TRACE_ENABLED=false)."]),
     ]
     body = [line for unit in report.units for line in _format_unit(unit)] or [
         "No weighted-score traces for rated runs. Is RETRIEVAL_WEIGHT_TRACE_ENABLED on?"

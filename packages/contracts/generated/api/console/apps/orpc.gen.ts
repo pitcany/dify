@@ -185,6 +185,8 @@ import {
   zGetAppsByAppIdNetworkAccessGroupStatusResponse,
   zGetAppsByAppIdPath,
   zGetAppsByAppIdResponse,
+  zGetAppsByAppIdRetrievalWeightRecommendationsPath,
+  zGetAppsByAppIdRetrievalWeightRecommendationsResponse,
   zGetAppsByAppIdServerPath,
   zGetAppsByAppIdServerResponse,
   zGetAppsByAppIdStatisticsAverageResponseTimePath,
@@ -2322,6 +2324,27 @@ export const publishToCreatorsPlatform = {
 }
 
 /**
+ * Advisory keyword/vector weight recommendations for weighted-score retrieval, from message feedback. Nothing is applied.
+ */
+export const get35 = oc
+  .route({
+    description:
+      'Advisory keyword/vector weight recommendations for weighted-score retrieval, from message feedback. Nothing is applied.',
+    inputStructure: 'detailed',
+    method: 'GET',
+    operationId: 'getAppsByAppIdRetrievalWeightRecommendations',
+    path: '/apps/{app_id}/retrieval-weight-recommendations',
+    tags: ['console'],
+  })
+  .input(z.object({ params: zGetAppsByAppIdRetrievalWeightRecommendationsPath }))
+  .output(zGetAppsByAppIdRetrievalWeightRecommendationsResponse)
+  .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
+
+export const retrievalWeightRecommendations = {
+  get: get35,
+}
+
+/**
  * Refresh MCP server configuration and regenerate server code
  */
 export const post30 = oc
@@ -2344,7 +2367,7 @@ export const refresh = {
 /**
  * Get MCP server configuration for an application
  */
-export const get35 = oc
+export const get36 = oc
   .route({
     description: 'Get MCP server configuration for an application',
     inputStructure: 'detailed',
@@ -2391,7 +2414,7 @@ export const put2 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const server = {
-  get: get35,
+  get: get36,
   post: post31,
   put: put2,
   refresh,
@@ -2495,7 +2518,7 @@ export const star = {
 /**
  * Get average response time statistics for an application
  */
-export const get36 = oc
+export const get37 = oc
   .route({
     description: 'Get average response time statistics for an application',
     inputStructure: 'detailed',
@@ -2514,13 +2537,13 @@ export const get36 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const averageResponseTime = {
-  get: get36,
+  get: get37,
 }
 
 /**
  * Get average session interaction statistics for an application
  */
-export const get37 = oc
+export const get38 = oc
   .route({
     description: 'Get average session interaction statistics for an application',
     inputStructure: 'detailed',
@@ -2539,13 +2562,13 @@ export const get37 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const averageSessionInteractions = {
-  get: get37,
+  get: get38,
 }
 
 /**
  * Get daily conversation statistics for an application
  */
-export const get38 = oc
+export const get39 = oc
   .route({
     description: 'Get daily conversation statistics for an application',
     inputStructure: 'detailed',
@@ -2564,13 +2587,13 @@ export const get38 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const dailyConversations = {
-  get: get38,
+  get: get39,
 }
 
 /**
  * Get daily terminal/end-user statistics for an application
  */
-export const get39 = oc
+export const get40 = oc
   .route({
     description: 'Get daily terminal/end-user statistics for an application',
     inputStructure: 'detailed',
@@ -2589,13 +2612,13 @@ export const get39 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const dailyEndUsers = {
-  get: get39,
+  get: get40,
 }
 
 /**
  * Get daily message statistics for an application
  */
-export const get40 = oc
+export const get41 = oc
   .route({
     description: 'Get daily message statistics for an application',
     inputStructure: 'detailed',
@@ -2614,13 +2637,13 @@ export const get40 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const dailyMessages = {
-  get: get40,
+  get: get41,
 }
 
 /**
  * Get daily token cost statistics for an application
  */
-export const get41 = oc
+export const get42 = oc
   .route({
     description: 'Get daily token cost statistics for an application',
     inputStructure: 'detailed',
@@ -2639,13 +2662,13 @@ export const get41 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const tokenCosts = {
-  get: get41,
+  get: get42,
 }
 
 /**
  * Get tokens per second statistics for an application
  */
-export const get42 = oc
+export const get43 = oc
   .route({
     description: 'Get tokens per second statistics for an application',
     inputStructure: 'detailed',
@@ -2664,13 +2687,13 @@ export const get42 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const tokensPerSecond = {
-  get: get42,
+  get: get43,
 }
 
 /**
  * Get user satisfaction rate statistics for an application
  */
-export const get43 = oc
+export const get44 = oc
   .route({
     description: 'Get user satisfaction rate statistics for an application',
     inputStructure: 'detailed',
@@ -2689,7 +2712,7 @@ export const get43 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const userSatisfactionRate = {
-  get: get43,
+  get: get44,
 }
 
 export const statistics = {
@@ -2706,7 +2729,7 @@ export const statistics = {
 /**
  * Get available TTS voices for a specific language
  */
-export const get44 = oc
+export const get45 = oc
   .route({
     description: 'Get available TTS voices for a specific language',
     inputStructure: 'detailed',
@@ -2731,7 +2754,7 @@ export const get44 = oc
   })
 
 export const voices = {
-  get: get44,
+  get: get45,
 }
 
 /**
@@ -2771,7 +2794,7 @@ export const textToAudio = {
 /**
  * Get app tracing configuration
  */
-export const get45 = oc
+export const get46 = oc
   .route({
     description: 'Get app tracing configuration',
     inputStructure: 'detailed',
@@ -2808,11 +2831,11 @@ export const post37 = oc
   })
 
 export const trace = {
-  get: get45,
+  get: get46,
   post: post37,
 }
 
-export const get46 = oc
+export const get47 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -2830,7 +2853,7 @@ export const get46 = oc
   .errors({ unsupported_tracing_provider: { status: 400, data: zUnsupportedTracingProviderError } })
 
 export const traceCapabilities = {
-  get: get46,
+  get: get47,
 }
 
 /**
@@ -2866,7 +2889,7 @@ export const delete8 = oc
 /**
  * Get tracing configuration for an application
  */
-export const get47 = oc
+export const get48 = oc
   .route({
     description: 'Get tracing configuration for an application',
     inputStructure: 'detailed',
@@ -2954,7 +2977,7 @@ export const post38 = oc
 
 export const traceConfig = {
   delete: delete8,
-  get: get47,
+  get: get48,
   patch,
   post: post38,
 }
@@ -2991,7 +3014,7 @@ export const retry = {
   post: post39,
 }
 
-export const get48 = oc
+export const get49 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -3012,7 +3035,7 @@ export const get48 = oc
   })
 
 export const bySourceId = {
-  get: get48,
+  get: get49,
   retry,
 }
 
@@ -3055,7 +3078,7 @@ export const triggerEnable = {
 /**
  * Get app triggers list
  */
-export const get49 = oc
+export const get50 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -3069,7 +3092,7 @@ export const get49 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const triggers = {
-  get: get49,
+  get: get50,
 }
 
 /**
@@ -3077,7 +3100,7 @@ export const triggers = {
  *
  * Get workflow application execution logs
  */
-export const get50 = oc
+export const get51 = oc
   .route({
     description: 'Get workflow application execution logs',
     inputStructure: 'detailed',
@@ -3097,7 +3120,7 @@ export const get50 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const workflowAppLogs = {
-  get: get50,
+  get: get51,
 }
 
 /**
@@ -3105,7 +3128,7 @@ export const workflowAppLogs = {
  *
  * Get workflow runs count statistics
  */
-export const get51 = oc
+export const get52 = oc
   .route({
     description: 'Get workflow runs count statistics',
     inputStructure: 'detailed',
@@ -3125,7 +3148,7 @@ export const get51 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const count3 = {
-  get: get51,
+  get: get52,
 }
 
 /**
@@ -3162,7 +3185,7 @@ export const tasks = {
 /**
  * Get the internal node executions of one workflow tool invocation
  */
-export const get52 = oc
+export const get53 = oc
   .route({
     description: 'Get the internal node executions of one workflow tool invocation',
     inputStructure: 'detailed',
@@ -3180,7 +3203,7 @@ export const get52 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const children = {
-  get: get52,
+  get: get53,
 }
 
 export const byNodeExecutionId = {
@@ -3192,7 +3215,7 @@ export const byNodeExecutionId = {
  *
  * Get workflow run node execution list
  */
-export const get53 = oc
+export const get54 = oc
   .route({
     description: 'Get workflow run node execution list',
     inputStructure: 'detailed',
@@ -3207,7 +3230,7 @@ export const get53 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const nodeExecutions = {
-  get: get53,
+  get: get54,
   byNodeExecutionId,
 }
 
@@ -3216,7 +3239,7 @@ export const nodeExecutions = {
  *
  * Get workflow run detail
  */
-export const get54 = oc
+export const get55 = oc
   .route({
     description: 'Get workflow run detail',
     inputStructure: 'detailed',
@@ -3231,7 +3254,7 @@ export const get54 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const byRunId = {
-  get: get54,
+  get: get55,
   nodeExecutions,
 }
 
@@ -3270,7 +3293,7 @@ export const download4 = {
 /**
  * Read a text/binary preview file in a workflow Agent node sandbox
  */
-export const get55 = oc
+export const get56 = oc
   .route({
     description: 'Read a text/binary preview file in a workflow Agent node sandbox',
     inputStructure: 'detailed',
@@ -3294,13 +3317,13 @@ export const get55 = oc
   })
 
 export const read = {
-  get: get55,
+  get: get56,
 }
 
 /**
  * List a directory in a workflow Agent node sandbox
  */
-export const get56 = oc
+export const get57 = oc
   .route({
     description: 'List a directory in a workflow Agent node sandbox',
     inputStructure: 'detailed',
@@ -3324,7 +3347,7 @@ export const get56 = oc
   })
 
 export const files3 = {
-  get: get56,
+  get: get57,
   download: download4,
   read,
 }
@@ -3350,7 +3373,7 @@ export const byWorkflowRunId = {
  *
  * Get workflow run list
  */
-export const get57 = oc
+export const get58 = oc
   .route({
     description: 'Get workflow run list',
     inputStructure: 'detailed',
@@ -3370,7 +3393,7 @@ export const get57 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const workflowRuns2 = {
-  get: get57,
+  get: get58,
   count: count3,
   tasks,
   byRunId,
@@ -3382,7 +3405,7 @@ export const workflowRuns2 = {
  *
  * Get all users in current tenant for mentions
  */
-export const get58 = oc
+export const get59 = oc
   .route({
     description: 'Get all users in current tenant for mentions',
     inputStructure: 'detailed',
@@ -3400,7 +3423,7 @@ export const get58 = oc
   })
 
 export const mentionUsers = {
-  get: get58,
+  get: get59,
 }
 
 /**
@@ -3545,7 +3568,7 @@ export const delete10 = oc
  *
  * Get a specific workflow comment
  */
-export const get59 = oc
+export const get60 = oc
   .route({
     description: 'Get a specific workflow comment',
     inputStructure: 'detailed',
@@ -3591,7 +3614,7 @@ export const put4 = oc
 
 export const byCommentId = {
   delete: delete10,
-  get: get59,
+  get: get60,
   put: put4,
   replies,
   resolve,
@@ -3602,7 +3625,7 @@ export const byCommentId = {
  *
  * Get all comments for a workflow
  */
-export const get60 = oc
+export const get61 = oc
   .route({
     description: 'Get all comments for a workflow',
     inputStructure: 'detailed',
@@ -3648,7 +3671,7 @@ export const post45 = oc
   })
 
 export const comments = {
-  get: get60,
+  get: get61,
   post: post45,
   mentionUsers,
   byCommentId,
@@ -3657,7 +3680,7 @@ export const comments = {
 /**
  * Get workflow average app interaction statistics
  */
-export const get61 = oc
+export const get62 = oc
   .route({
     description: 'Get workflow average app interaction statistics',
     inputStructure: 'detailed',
@@ -3676,13 +3699,13 @@ export const get61 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const averageAppInteractions = {
-  get: get61,
+  get: get62,
 }
 
 /**
  * Get workflow daily runs statistics
  */
-export const get62 = oc
+export const get63 = oc
   .route({
     description: 'Get workflow daily runs statistics',
     inputStructure: 'detailed',
@@ -3701,13 +3724,13 @@ export const get62 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const dailyConversations2 = {
-  get: get62,
+  get: get63,
 }
 
 /**
  * Get workflow daily terminals statistics
  */
-export const get63 = oc
+export const get64 = oc
   .route({
     description: 'Get workflow daily terminals statistics',
     inputStructure: 'detailed',
@@ -3726,13 +3749,13 @@ export const get63 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const dailyTerminals = {
-  get: get63,
+  get: get64,
 }
 
 /**
  * Get workflow daily token cost statistics
  */
-export const get64 = oc
+export const get65 = oc
   .route({
     description: 'Get workflow daily token cost statistics',
     inputStructure: 'detailed',
@@ -3751,7 +3774,7 @@ export const get64 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const tokenCosts2 = {
-  get: get64,
+  get: get65,
 }
 
 export const statistics2 = {
@@ -3771,7 +3794,7 @@ export const workflow = {
  *
  * Get default block configuration by type
  */
-export const get65 = oc
+export const get66 = oc
   .route({
     description: 'Get default block configuration by type',
     inputStructure: 'detailed',
@@ -3791,7 +3814,7 @@ export const get65 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const byBlockType = {
-  get: get65,
+  get: get66,
 }
 
 /**
@@ -3799,7 +3822,7 @@ export const byBlockType = {
  *
  * Get default block configurations for workflow
  */
-export const get66 = oc
+export const get67 = oc
   .route({
     description: 'Get default block configurations for workflow',
     inputStructure: 'detailed',
@@ -3814,14 +3837,14 @@ export const get66 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const defaultWorkflowBlockConfigs = {
-  get: get66,
+  get: get67,
   byBlockType,
 }
 
 /**
  * Get conversation variables for workflow
  */
-export const get67 = oc
+export const get68 = oc
   .route({
     description: 'Get conversation variables for workflow',
     inputStructure: 'detailed',
@@ -3856,7 +3879,7 @@ export const post46 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const conversationVariables2 = {
-  get: get67,
+  get: get68,
   post: post46,
 }
 
@@ -3865,7 +3888,7 @@ export const conversationVariables2 = {
  *
  * Get environment variables for workflow
  */
-export const get68 = oc
+export const get69 = oc
   .route({
     description: 'Get environment variables for workflow',
     inputStructure: 'detailed',
@@ -3904,7 +3927,7 @@ export const post47 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const environmentVariables = {
-  get: get68,
+  get: get69,
   post: post47,
 }
 
@@ -4141,7 +4164,7 @@ export const loop2 = {
   nodes: nodes6,
 }
 
-export const get69 = oc
+export const get70 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -4156,7 +4179,7 @@ export const get69 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const candidates = {
-  get: get69,
+  get: get70,
 }
 
 export const post55 = oc
@@ -4262,7 +4285,7 @@ export const validate = {
   post: post58,
 }
 
-export const get70 = oc
+export const get71 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -4309,7 +4332,7 @@ export const put5 = oc
   })
 
 export const agentComposer = {
-  get: get70,
+  get: get71,
   put: put5,
   candidates,
   copyFromRoster,
@@ -4321,7 +4344,7 @@ export const agentComposer = {
 /**
  * Get last run result for draft workflow node
  */
-export const get71 = oc
+export const get72 = oc
   .route({
     description: 'Get last run result for draft workflow node',
     inputStructure: 'detailed',
@@ -4335,7 +4358,7 @@ export const get71 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const lastRun = {
-  get: get71,
+  get: get72,
 }
 
 /**
@@ -4413,7 +4436,7 @@ export const delete11 = oc
 /**
  * Get variables for a specific node
  */
-export const get72 = oc
+export const get73 = oc
   .route({
     description: 'Get variables for a specific node',
     inputStructure: 'detailed',
@@ -4428,7 +4451,7 @@ export const get72 = oc
 
 export const variables = {
   delete: delete11,
-  get: get72,
+  get: get73,
 }
 
 export const byNodeId8 = {
@@ -4477,7 +4500,7 @@ export const run10 = {
 /**
  * Server-Sent Events stream of inspector deltas for a draft workflow run.
  */
-export const get73 = oc
+export const get74 = oc
   .route({
     description: 'Server-Sent Events stream of inspector deltas for a draft workflow run.',
     inputStructure: 'detailed',
@@ -4494,13 +4517,13 @@ export const get73 = oc
   })
 
 export const events = {
-  get: get73,
+  get: get74,
 }
 
 /**
  * Full value for one declared output, including signed download URL for files.
  */
-export const get74 = oc
+export const get75 = oc
   .route({
     description: 'Full value for one declared output, including signed download URL for files.',
     inputStructure: 'detailed',
@@ -4523,7 +4546,7 @@ export const get74 = oc
   })
 
 export const preview5 = {
-  get: get74,
+  get: get75,
 }
 
 export const byOutputName = {
@@ -4533,7 +4556,7 @@ export const byOutputName = {
 /**
  * One node's declared outputs for a draft workflow run.
  */
-export const get75 = oc
+export const get76 = oc
   .route({
     description: "One node's declared outputs for a draft workflow run.",
     inputStructure: 'detailed',
@@ -4551,14 +4574,14 @@ export const get75 = oc
   })
 
 export const byNodeId9 = {
-  get: get75,
+  get: get76,
   byOutputName,
 }
 
 /**
  * Snapshot of every node's declared outputs for a draft workflow run.
  */
-export const get76 = oc
+export const get77 = oc
   .route({
     description: "Snapshot of every node's declared outputs for a draft workflow run.",
     inputStructure: 'detailed',
@@ -4575,7 +4598,7 @@ export const get76 = oc
   })
 
 export const nodeOutputs = {
-  get: get76,
+  get: get77,
   events,
   byNodeId: byNodeId9,
 }
@@ -4591,7 +4614,7 @@ export const runs = {
 /**
  * Get system variables for workflow
  */
-export const get77 = oc
+export const get78 = oc
   .route({
     description: 'Get system variables for workflow',
     inputStructure: 'detailed',
@@ -4605,7 +4628,7 @@ export const get77 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const systemVariables = {
-  get: get77,
+  get: get78,
 }
 
 /**
@@ -4715,7 +4738,7 @@ export const delete12 = oc
 /**
  * Get a specific workflow variable
  */
-export const get78 = oc
+export const get79 = oc
   .route({
     description: 'Get a specific workflow variable',
     inputStructure: 'detailed',
@@ -4751,7 +4774,7 @@ export const patch2 = oc
 
 export const byVariableId = {
   delete: delete12,
-  get: get78,
+  get: get79,
   patch: patch2,
   reset,
 }
@@ -4778,7 +4801,7 @@ export const delete13 = oc
  *
  * Get draft workflow variables
  */
-export const get79 = oc
+export const get80 = oc
   .route({
     description: 'Get draft workflow variables',
     inputStructure: 'detailed',
@@ -4802,7 +4825,7 @@ export const get79 = oc
 
 export const variables2 = {
   delete: delete13,
-  get: get79,
+  get: get80,
   byVariableId,
 }
 
@@ -4811,7 +4834,7 @@ export const variables2 = {
  *
  * Get draft workflow for an application
  */
-export const get80 = oc
+export const get81 = oc
   .route({
     description: 'Get draft workflow for an application',
     inputStructure: 'detailed',
@@ -4856,7 +4879,7 @@ export const post64 = oc
   })
 
 export const draft2 = {
-  get: get80,
+  get: get81,
   post: post64,
   conversationVariables: conversationVariables2,
   environmentVariables,
@@ -4877,7 +4900,7 @@ export const draft2 = {
  *
  * Get published workflow for an application
  */
-export const get81 = oc
+export const get82 = oc
   .route({
     description: 'Get published workflow for an application',
     inputStructure: 'detailed',
@@ -4913,14 +4936,14 @@ export const post65 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const publish = {
-  get: get81,
+  get: get82,
   post: post65,
 }
 
 /**
  * Server-Sent Events stream of inspector deltas for a published workflow run.
  */
-export const get82 = oc
+export const get83 = oc
   .route({
     description: 'Server-Sent Events stream of inspector deltas for a published workflow run.',
     inputStructure: 'detailed',
@@ -4937,13 +4960,13 @@ export const get82 = oc
   })
 
 export const events2 = {
-  get: get82,
+  get: get83,
 }
 
 /**
  * Full value for one declared output of a published run.
  */
-export const get83 = oc
+export const get84 = oc
   .route({
     description: 'Full value for one declared output of a published run.',
     inputStructure: 'detailed',
@@ -4970,7 +4993,7 @@ export const get83 = oc
   })
 
 export const preview6 = {
-  get: get83,
+  get: get84,
 }
 
 export const byOutputName2 = {
@@ -4980,7 +5003,7 @@ export const byOutputName2 = {
 /**
  * One node's declared outputs for a published workflow run.
  */
-export const get84 = oc
+export const get85 = oc
   .route({
     description: "One node's declared outputs for a published workflow run.",
     inputStructure: 'detailed',
@@ -4998,14 +5021,14 @@ export const get84 = oc
   })
 
 export const byNodeId10 = {
-  get: get84,
+  get: get85,
   byOutputName: byOutputName2,
 }
 
 /**
  * Snapshot of every node's declared outputs for a published workflow run.
  */
-export const get85 = oc
+export const get86 = oc
   .route({
     description: "Snapshot of every node's declared outputs for a published workflow run.",
     inputStructure: 'detailed',
@@ -5022,7 +5045,7 @@ export const get85 = oc
   })
 
 export const nodeOutputs2 = {
-  get: get85,
+  get: get86,
   events: events2,
   byNodeId: byNodeId10,
 }
@@ -5042,7 +5065,7 @@ export const published = {
 /**
  * Get webhook trigger for a node
  */
-export const get86 = oc
+export const get87 = oc
   .route({
     inputStructure: 'detailed',
     method: 'GET',
@@ -5064,7 +5087,7 @@ export const get86 = oc
   })
 
 export const webhook = {
-  get: get86,
+  get: get87,
 }
 
 export const triggers2 = {
@@ -5143,7 +5166,7 @@ export const byWorkflowId = {
  *
  * Get all published workflows for an application
  */
-export const get87 = oc
+export const get88 = oc
   .route({
     description: 'Get all published workflows for an application',
     inputStructure: 'detailed',
@@ -5163,7 +5186,7 @@ export const get87 = oc
   .errors({ app_not_found: { status: 404, data: zAppNotFoundError } })
 
 export const workflows3 = {
-  get: get87,
+  get: get88,
   defaultWorkflowBlockConfigs,
   draft: draft2,
   publish,
@@ -5191,7 +5214,7 @@ export const delete15 = oc
 /**
  * Get application details
  */
-export const get88 = oc
+export const get89 = oc
   .route({
     description: 'Get application details',
     inputStructure: 'detailed',
@@ -5220,7 +5243,7 @@ export const put7 = oc
 
 export const byAppId2 = {
   delete: delete15,
-  get: get88,
+  get: get89,
   put: put7,
   advancedChat,
   agent,
@@ -5245,6 +5268,7 @@ export const byAppId2 = {
   name,
   networkAccessGroup,
   publishToCreatorsPlatform,
+  retrievalWeightRecommendations,
   server,
   site,
   siteEnable,
@@ -5286,7 +5310,7 @@ export const byApiKeyId = {
 /**
  * Get all API keys for an app
  */
-export const get89 = oc
+export const get90 = oc
   .route({
     description: 'Get all API keys for an app',
     inputStructure: 'detailed',
@@ -5319,7 +5343,7 @@ export const post67 = oc
   })
 
 export const apiKeys = {
-  get: get89,
+  get: get90,
   post: post67,
   byApiKeyId,
 }
@@ -5331,7 +5355,7 @@ export const byResourceId = {
 /**
  * Get list of applications with pagination and filtering
  */
-export const get90 = oc
+export const get91 = oc
   .route({
     description: 'Get list of applications with pagination and filtering',
     inputStructure: 'detailed',
@@ -5360,7 +5384,7 @@ export const post68 = oc
   .output(zPostAppsResponse)
 
 export const apps = {
-  get: get90,
+  get: get91,
   post: post68,
   imports,
   recent,

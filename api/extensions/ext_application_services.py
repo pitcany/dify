@@ -39,7 +39,10 @@ from extensions.application_services.knowledge import (
 )
 from extensions.application_services.rbac import RBACServices, build_rbac_services
 from extensions.application_services.resource_access_token import build_resource_access_token_service
-from extensions.application_services.retrieval_weight_traces import build_weighted_score_trace_recorder
+from extensions.application_services.retrieval_weight_traces import (
+    build_retrieval_weight_recommendation_service,
+    build_weighted_score_trace_recorder,
+)
 from extensions.application_services.trial_app import TrialAppServices, build_trial_app_services
 from extensions.application_services.workspace import (
     WorkspaceServices,
@@ -160,6 +163,7 @@ from services.human_input_file_upload_service import HumanInputFileUploadService
 from services.init_validation_service import InitValidationService
 from services.inner_mail_service import InnerMailService
 from services.knowledge.api_key_service import DatasetApiKeyService
+from services.knowledge.retrieval.weight_recommendations import RetrievalWeightRecommendationService
 from services.knowledge_fs.builtin_tool.knowledge_fs.knowledge_fs import KnowledgeFSProvider
 from services.knowledge_fs.workflow_runtime import build_knowledge_fs_node_dependencies
 from services.message_feedback_service import MessageFeedbackService
@@ -363,6 +367,7 @@ class ApplicationServices:
     workspaces: WorkspaceServices
     workflow_app_logs: WorkflowAppLogQueryService
     workflow_comments: WorkflowCommentService
+    retrieval_weight_recommendations: RetrievalWeightRecommendationService
     inner_mail: InnerMailService
     web_passport: WebPassportService
     tags: TagApplicationService
@@ -838,6 +843,7 @@ def build_application_services(
             notifier=CeleryWorkflowCommentMentionNotifier(),
             console_web_url=dify_config.CONSOLE_WEB_URL,
         ),
+        retrieval_weight_recommendations=build_retrieval_weight_recommendation_service(database_client=database_client),
         inner_mail=InnerMailService(dispatch=enqueue_inner_mail),
         web_passport=WebPassportService(
             passports=WebPassportRepository(

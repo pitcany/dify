@@ -9,6 +9,7 @@ from domain.retrieval_weight_tuning.weight_recommendation import (
     RecommendWeightChange,
     TuningPolicy,
 )
+from machinery.context import RequestContext
 from services.knowledge.retrieval.weight_recommendations import (
     RecommendationAppNotFoundError,
     RetrievalWeightRecommendationService,
@@ -18,6 +19,7 @@ from services.knowledge.retrieval.weight_recommendations import (
 )
 
 NOW = datetime(2026, 10, 30, 12)
+CONTEXT = RequestContext(request_id="request", trace_id=None, account_id="account", active_workspace_id="tenant")
 POLICY = TuningPolicy(
     grid_step=0.05,
     min_runs_per_rating=2,
@@ -91,18 +93,19 @@ def _service(evidence: _Evidence) -> RetrievalWeightRecommendationService:
         max_feedback=100,
         now=lambda: NOW,
         new_sampler=lambda: random.Random(0).randrange,  # noqa: S311 - deterministic resampling
+        tracing_enabled=True,
     )
 
 
 def test_unknown_app_is_rejected() -> None:
     with pytest.raises(RecommendationAppNotFoundError):
-        _service(_Evidence(feedback=[], traces=[], exists=False)).recommend(tenant_id="tenant", app_id="app")
+        _service(_Evidence(feedback=[], traces=[], exists=False)).recommend(CONTEXT, "app")
 
 
 def test_no_feedback_reads_no_traces() -> None:
     evidence = _Evidence(feedback=[], traces=[])
 
-    report = _service(evidence).recommend(tenant_id="tenant", app_id="app")
+    report = _service(evidence).recommend(CONTEXT, "app")
 
     assert (report.rated_runs, report.units, report.window_start) == (0, (), NOW - timedelta(days=30))
     assert evidence.requested_runs == []
@@ -123,7 +126,7 @@ def test_admin_rating_overrides_end_user_rating() -> None:
         _trace("disliked-2", VECTOR_FAVOURED),
     ]
 
-    report = _service(_Evidence(feedback=feedback, traces=traces)).recommend(tenant_id="tenant", app_id="app")
+    report = _service(_Evidence(feedback=feedback, traces=traces)).recommend(CONTEXT, "app")
 
     [unit] = report.units
     assert report.rated_runs == 4
@@ -140,7 +143,7 @@ def test_stages_are_separate_units_and_current_weight_comes_from_the_latest_trac
         _trace("run-2", ROBUST, stage="dataset", dataset_id="ds-1", vector_weight=0.0, keyword_weight=0.0),
     ]
 
-    report = _service(_Evidence(feedback=feedback, traces=traces)).recommend(tenant_id="tenant", app_id="app")
+    report = _service(_Evidence(feedback=feedback, traces=traces)).recommend(CONTEXT, "app")
 
     [cross_dataset] = report.units
     assert cross_dataset.unit.stage == "cross_dataset"

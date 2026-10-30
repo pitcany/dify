@@ -29,6 +29,7 @@ from domain.retrieval_weight_tuning.weight_recommendation import (
     WeightRecommendation,
     recommend_vector_weight,
 )
+from machinery.context import RequestContext
 
 type FeedbackSource = Literal["user", "admin"]
 type TraceStage = Literal["dataset", "cross_dataset"]
@@ -113,7 +114,10 @@ class UnitRecommendation:
 
 @dataclass(frozen=True, slots=True)
 class RetrievalWeightReport:
+    """``tracing_enabled`` says whether new traces are being collected; without it the report cannot grow."""
+
     app_id: str
+    tracing_enabled: bool
     window_start: datetime
     rated_runs: int
     units: tuple[UnitRecommendation, ...]
@@ -129,6 +133,7 @@ class RetrievalWeightRecommendationService:
         max_feedback: int,
         now: Callable[[], datetime],
         new_sampler: Callable[[], Callable[[int], int]],
+        tracing_enabled: bool,
     ) -> None:
         """``now`` returns naive UTC. ``new_sampler`` returns a fresh index sampler per report, so a
         deterministic sampler makes reports reproducible. Raises ValueError for a non-positive window or limit.
@@ -141,14 +146,16 @@ class RetrievalWeightRecommendationService:
         self._max_feedback = max_feedback
         self._now = now
         self._new_sampler = new_sampler
+        self._tracing_enabled = tracing_enabled
 
-    def recommend(self, *, tenant_id: str, app_id: str) -> RetrievalWeightReport:
-        """Build the advisory report for the app. Read-only.
+    def recommend(self, context: RequestContext, app_id: str) -> RetrievalWeightReport:
+        """Build the advisory report for an app in the caller's active workspace. Read-only.
 
-        Raises RecommendationAppNotFoundError when the app does not belong to the tenant.
+        Raises RecommendationAppNotFoundError when the app does not belong to that workspace.
         Postcondition: one entry per tuning unit that has traces for rated runs, ordered by node,
         stage and dataset.
         """
+        tenant_id = context.active_workspace_id
         if not self._evidence.app_exists(tenant_id=tenant_id, app_id=app_id):
             raise RecommendationAppNotFoundError()
         window_start = self._now() - timedelta(days=self._window_days)
@@ -169,6 +176,7 @@ class RetrievalWeightRecommendationService:
         )
         return RetrievalWeightReport(
             app_id=app_id,
+            tracing_enabled=self._tracing_enabled,
             window_start=window_start,
             rated_runs=len(ratings),
             units=tuple(

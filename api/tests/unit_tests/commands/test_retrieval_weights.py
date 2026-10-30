@@ -32,6 +32,7 @@ def test_report_states_each_verdict_and_that_nothing_was_applied() -> None:
     )
     report = RetrievalWeightReport(
         app_id="app",
+        tracing_enabled=True,
         window_start=datetime(2026, 9, 30),
         rated_runs=75,
         units=(
@@ -63,6 +64,11 @@ def test_report_states_each_verdict_and_that_nothing_was_applied() -> None:
 
 
 def test_report_explains_an_empty_result() -> None:
-    report = RetrievalWeightReport(app_id="app", window_start=datetime(2026, 9, 30), rated_runs=0, units=())
+    report = RetrievalWeightReport(
+        app_id="app", tracing_enabled=False, window_start=datetime(2026, 9, 30), rated_runs=0, units=()
+    )
 
-    assert "RETRIEVAL_WEIGHT_TRACE_ENABLED" in format_report(report)
+    text = format_report(report)
+
+    assert "Trace collection is off (RETRIEVAL_WEIGHT_TRACE_ENABLED=false)." in text
+    assert "No weighted-score traces for rated runs." in text

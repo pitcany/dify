@@ -65,4 +65,5 @@ def build_retrieval_weight_recommendation_service(
         max_feedback=_MAX_FEEDBACK_ROWS,
         now=naive_utc_now,
         new_sampler=lambda: random.Random(_RESAMPLING_SEED).randrange,  # noqa: S311 - resampling, not security
+        tracing_enabled=dify_config.RETRIEVAL_WEIGHT_TRACE_ENABLED,
     )

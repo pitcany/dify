@@ -765,6 +765,14 @@ export type RedirectUrlResponse = {
   redirect_url: string
 }
 
+export type RetrievalWeightReportResponse = {
+  app_id: string
+  rated_runs: number
+  tracing_enabled: boolean
+  units: Array<RetrievalWeightUnitResponse>
+  window_start: number
+}
+
 export type AppMcpServerResponse = {
   created_at?: number | null
   description: string
@@ -2310,6 +2318,22 @@ export type AppNetworkAccessGroupBindingResponse = {
   version: number
 }
 
+export type RetrievalWeightUnitResponse = {
+  analysis: RetrievalWeightAnalysisResponse | null
+  current_vector_weight: number
+  dataset_id: string | null
+  disliked_runs: number
+  embedding_model_name: string
+  embedding_provider_name: string
+  liked_runs: number
+  node_id: string
+  recommended_vector_weight: number | null
+  required_per_rating: number | null
+  stage: 'cross_dataset' | 'dataset'
+  verdict: 'insufficient_evidence' | 'keep_current' | 'recommend_change'
+  weights_changed_in_window: boolean
+}
+
 export type AppMcpServerStatus = 'active' | 'inactive' | 'normal'
 
 export type AverageResponseTimeStatisticItem = {
@@ -3390,6 +3414,16 @@ export type AppExternalDataInputPayload = {
   external_data_tool: AppInputFieldPayload
 }
 
+export type RetrievalWeightAnalysisResponse = {
+  affected_share: number
+  best_vector_weight: number
+  curve: Array<RetrievalWeightCurvePointResponse>
+  improvement: number
+  interval_high: number
+  interval_low: number
+  stability: number
+}
+
 export type WorkflowRunForLogResponse = {
   created_at?: number | null
   elapsed_time?: number | null
@@ -4070,6 +4104,11 @@ export type AppSelectFieldPayload = {
     | boolean
     | null
     | undefined
+}
+
+export type RetrievalWeightCurvePointResponse = {
+  improvement: number
+  vector_weight: number
 }
 
 export type WorkflowFileUploadTransferPayload = {
@@ -6800,6 +6839,30 @@ export type PostAppsByAppIdPublishToCreatorsPlatformResponses = {
 
 export type PostAppsByAppIdPublishToCreatorsPlatformResponse =
   PostAppsByAppIdPublishToCreatorsPlatformResponses[keyof PostAppsByAppIdPublishToCreatorsPlatformResponses]
+
+export type GetAppsByAppIdRetrievalWeightRecommendationsData = {
+  body?: never
+  path: {
+    app_id: string
+  }
+  query?: never
+  url: '/apps/{app_id}/retrieval-weight-recommendations'
+}
+
+export type GetAppsByAppIdRetrievalWeightRecommendationsErrors = {
+  404: AppNotFoundError | ErrorResponse
+  default: ErrorResponse
+}
+
+export type GetAppsByAppIdRetrievalWeightRecommendationsError =
+  GetAppsByAppIdRetrievalWeightRecommendationsErrors[keyof GetAppsByAppIdRetrievalWeightRecommendationsErrors]
+
+export type GetAppsByAppIdRetrievalWeightRecommendationsResponses = {
+  200: RetrievalWeightReportResponse
+}
+
+export type GetAppsByAppIdRetrievalWeightRecommendationsResponse =
+  GetAppsByAppIdRetrievalWeightRecommendationsResponses[keyof GetAppsByAppIdRetrievalWeightRecommendationsResponses]
 
 export type GetAppsByAppIdServerData = {
   body?: never

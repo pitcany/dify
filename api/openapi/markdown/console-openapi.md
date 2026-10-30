@@ -3373,6 +3373,23 @@ Check if app name is available
 | 200 | Success | **application/json**: [RedirectUrlResponse](#redirecturlresponse)<br> |
 | default | Error | **application/json**: [ErrorResponse](#errorresponse)<br> |
 
+### [GET] /apps/{app_id}/retrieval-weight-recommendations
+Advisory keyword/vector weight recommendations for weighted-score retrieval, from message feedback. Nothing is applied.
+
+#### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ------ |
+| app_id | path | Application ID | Yes | string (uuid) |
+
+#### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Success | **application/json**: [RetrievalWeightReportResponse](#retrievalweightreportresponse)<br> |
+| 404 | Not Found | **application/json**: [AppNotFoundError](#appnotfounderror)<br>[ErrorResponse](#errorresponse)<br> |
+| default | Error | **application/json**: [ErrorResponse](#errorresponse)<br> |
+
 ### [GET] /apps/{app_id}/server
 Get MCP server configuration for an application
 
@@ -33930,6 +33947,53 @@ Immutable authoritative presentation snapshot for one v2 form.
 | summary | string |  | No |
 | title | string |  | No |
 | word_count | integer |  | No |
+
+#### RetrievalWeightAnalysisResponse
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| affected_share | number | Share of rated runs that would lose at least one shown result. | Yes |
+| best_vector_weight | number |  | Yes |
+| curve | [ [RetrievalWeightCurvePointResponse](#retrievalweightcurvepointresponse) ] |  | Yes |
+| improvement | number | Liked minus disliked retention at the best weight; 0 is what users saw. | Yes |
+| interval_high | number |  | Yes |
+| interval_low | number |  | Yes |
+| stability | number | Share of bootstrap resamples whose best weight is near the best weight. | Yes |
+
+#### RetrievalWeightCurvePointResponse
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| improvement | number |  | Yes |
+| vector_weight | number |  | Yes |
+
+#### RetrievalWeightReportResponse
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| app_id | string |  | Yes |
+| rated_runs | integer |  | Yes |
+| tracing_enabled | boolean |  | Yes |
+| units | [ [RetrievalWeightUnitResponse](#retrievalweightunitresponse) ] |  | Yes |
+| window_start | integer |  | Yes |
+
+#### RetrievalWeightUnitResponse
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| analysis | [RetrievalWeightAnalysisResponse](#retrievalweightanalysisresponse) | Null when the verdict is insufficient_evidence. | Yes |
+| current_vector_weight | number |  | Yes |
+| dataset_id | string | Set for the dataset stage; null for the cross-dataset merge. | Yes |
+| disliked_runs | integer |  | Yes |
+| embedding_model_name | string |  | Yes |
+| embedding_provider_name | string |  | Yes |
+| liked_runs | integer |  | Yes |
+| node_id | string |  | Yes |
+| recommended_vector_weight | number | Set only when the verdict is recommend_change. | Yes |
+| required_per_rating | integer | Set only when the verdict is insufficient_evidence. | Yes |
+| stage | string, <br>**Available values:** "cross_dataset", "dataset" | *Enum:* `"cross_dataset"`, `"dataset"` | Yes |
+| verdict | string, <br>**Available values:** "insufficient_evidence", "keep_current", "recommend_change" | *Enum:* `"insufficient_evidence"`, `"keep_current"`, `"recommend_change"` | Yes |
+| weights_changed_in_window | boolean |  | Yes |
 
 #### RetrieverResource
 

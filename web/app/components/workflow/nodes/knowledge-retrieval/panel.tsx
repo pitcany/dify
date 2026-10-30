@@ -12,6 +12,7 @@ import AddKnowledge from './components/add-dataset'
 import DatasetList from './components/dataset-list'
 import MetadataFilter from './components/metadata/metadata-filter'
 import RetrievalConfig from './components/retrieval-config'
+import RetrievalTuning from './components/retrieval-tuning'
 import useConfig from './use-config'
 
 const i18nPrefix = 'nodes.knowledgeRetrieval'
@@ -144,6 +145,7 @@ const Panel: FC<NodePanelProps<KnowledgeRetrievalNodeType>> = ({ id, data }) => 
           availableNumberNodesWithParent={availableNumberNodesWithParent}
         />
       </div>
+      <RetrievalTuning nodeId={id} datasets={selectedDatasets} />
       <Split />
       <div>
         <OutputVars>
